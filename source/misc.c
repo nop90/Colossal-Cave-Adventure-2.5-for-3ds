@@ -12,12 +12,15 @@
 #define TRUE  (0==0)
 #define FALSE (0!=0)
 
+#ifdef _3DS
+int count = 0;
+#endif	
+
 /*  I/O ROUTINES (SPEAK, PSPEAK, RSPEAK, SETPRM, GETIN, YES) */
 
 #undef SPEAK
 void fSPEAK(N)long N; {
 long BLANK, CASE, I, K, L, NEG, NPARMS, PARM, PRMTYP, STATE;
-
 /*  PRINT THE MESSAGE WHICH STARTS AT LINES(N).  PRECEDE IT WITH A BLANK LINE
  *  UNLESS BLKLIN IS FALSE. */
 
@@ -27,6 +30,20 @@ long BLANK, CASE, I, K, L, NEG, NPARMS, PARM, PRMTYP, STATE;
 	K=N;
 	NPARMS=1;
 L10:	L=IABS(LINES[K])-1;
+#ifdef _3DS
+	count++;
+	if (count == 28) {
+		printf("Press A to continue\n");
+		while(aptMainLoop()) {
+			gspWaitForVBlank();
+			hidScanInput();
+			if (hidKeysDown() & KEY_A) break;
+		}
+		printf("\x1b[29;1H                    ");
+		printf("\x1b[29;1H");
+		count=1;
+	}
+#endif	
 	K=K+1;
 	LNLENG=0;
 	LNPOSN=1;
@@ -896,6 +913,7 @@ long I, VAL; static FILE *OPENED = NULL;
 
 	if(FIL) goto L15;
 #ifdef _3DS
+	count=0;
 	printf(">");
 	INLINE[1]=0;
     swkbd_GetStr(INLINE+1, 32);

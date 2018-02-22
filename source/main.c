@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include "3ds.h"
 #include "3ds/swkbd.h"
+
+int txtColorSwitched=0; // flag to track if text color is awapped from green to white - handled in ths swkeyboard code. I now it's dirty 
 #endif
 
 
@@ -27,7 +29,13 @@ long ABBNUM, ACTSPK[36], AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD, BO
 		EMRALD, ENTER, ENTRNC, FIND, FISSUR, FIXD[101], FOOBAR, FOOD,
 		GRATE, HINT, HINTED[21], HINTLC[21], HINTS[21][5], HNTMAX,
 		HNTSIZ = 20, I, INVENT, IGO, IWEST, J, JADE, K, K2, KEY[186], KEYS, KK,
-		KNFLOC, KNIFE, KQ, L, LAMP, LIMIT, LINSIZ = 12500, LINUSE, LL,
+		KNFLOC, KNIFE, KQ, L, LAMP, LIMIT, 
+#ifdef _3DS
+		LINSIZ = 13000,
+#else		
+		LINSIZ = 12500, 
+#endif
+		LINUSE, LL,
 		LMWARN, LOC, LOCK, LOCSIZ = 185, LOCSND[186], LOOK, LTEXT[186],
 		MAGZIN, MAXDIE, MAXTRS, MESH = 123456789,
 		MESSAG, MIRROR, MXSCOR,
@@ -41,6 +49,7 @@ long ABBNUM, ACTSPK[36], AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD, BO
 		 TRVSIZ = 885, TTEXT[6], TURNS, URN, V1, V2, VASE, VEND, VERB,
 		VOLCAN, VRBSIZ = 35, VRSION = 25, WATER, WD1, WD1X, WD2, WD2X,
 		WZDARK = FALSE, ZZWORD;
+
 
 extern initialise();
 extern void score(long);
@@ -69,7 +78,7 @@ main() {
 #ifdef _3DS
 	gfxInitDefault();
 	consoleInit(GFX_TOP, NULL);
-	printf("   Colossal Cave Adventure - 3DS port by NOP90\n\n");
+	printf("\x1b[32;1m   Colossal Cave Adventure - 3DS port by NOP90\n\n");
 	romfsInit();
 	// In case game dir doesn't exist
 	mkdir("/3ds", 0777);

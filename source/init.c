@@ -4,6 +4,10 @@
 #include "funcs.h"
 #include <stdio.h>
 
+#ifdef _3DS
+#include "3ds.h"
+#endif
+
 #define TRUE  (0==0)
 #define FALSE (0!=0)
 
@@ -648,6 +652,8 @@ static quick_init() {
 #ifdef AMIGA
 	f = fopen("ram:adventure.data", READ_MODE);
 #elif defined(_3DS)
+	hidScanInput();
+	if (hidKeysHeld() & KEY_R) return(FALSE);
 	f = fopen("/3ds/Advent/adventure.data", READ_MODE);
 
 #else

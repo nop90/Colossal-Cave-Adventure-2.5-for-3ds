@@ -9,6 +9,9 @@
 #define MAX_SKIN 8
 #define SWKBD_MAGIK 0xFF
 
+// this is a dirty hack for Adventure - Not related to swKeyboard
+extern int txtColorSwitched;
+
 void key(u8* buf,int cursorpos,u8 ch);
 void drawTxtArea(u8* dest, u32 txtborderrgb, u32 txtbgrgb);
 void printWord(u8* dest,u8* word, int x, int y, u8 r, u8 g, u8 b);
@@ -107,6 +110,18 @@ void swkbd_GetStr(u8* buf, u32 buflen)
 	hidScanInput();
 	hidTouchRead(&touchpos);
 	keysPressed = hidKeysHeld();
+
+// quick and dirty addon to change console textcolor in Adventue. Not related to swkeyboard 	
+	if (!txtColorSwitched && (keysPressed & KEY_R) && (hidKeysDown() & KEY_UP))
+	{ 
+		printf("\x1b[37;1mtext color switched to white\n\n>");
+		txtColorSwitched=1;
+    }
+	if (txtColorSwitched && (keysPressed & KEY_R) && (hidKeysDown() & KEY_DOWN))
+	{ 
+		printf("\x1b[32;1mText color switched to green\n\n>");
+		txtColorSwitched=0;
+    }
 
 	touchstate=0;
 
